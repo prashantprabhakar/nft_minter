@@ -9,9 +9,10 @@ const { minters, additionalGasPrice, totalToMint} = require("../config")
 let errorCount = 0; // to prevent script from running infinite
 let totalMinted = 0;
 let minterNonce = {};
-const mintfee = 0.123 * (10 ** 18);  // wei
+const mintfee = 1
 
 const mintNft = async(currentMinter) => {
+  console.log("minting...")
   try {
     let {
       minter,
@@ -27,7 +28,7 @@ const mintNft = async(currentMinter) => {
     let txHash = await mintService.mint({
       from: minter,
       privateKey,
-      gas: 30000000,
+      gas: 610200,
       additionalGasPrice,
       value: mintfee*5,
     });
@@ -41,13 +42,18 @@ const mintNft = async(currentMinter) => {
   }
 }
 
-while(totalMinted < totalToMint || errorCount >= 50) {
-  try {
-    for(let i=0; i< minters.length; i++) {
-      mintNft(minters[i]).then( txHash => console.log("Tx Hash sent:", txHash) );
+async function start() {
+  while(totalMinted < totalToMint || errorCount >= 5) {
+    try {
+      for(let i=0; i< minters.length; i++) {
+        let txHash= await mintNft(minters[i]);
+        console.log("Tx Hash sent:", txHash)
+      }
+    } catch(error) {
+      console.log(error);
+      errorCount ++;
     }
-  } catch(error) {
-    console.log(error);
-    errorCount ++;
   }
 }
+
+start().then(() => console.log("done"))

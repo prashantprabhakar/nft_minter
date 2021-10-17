@@ -109,7 +109,7 @@ exports.generateWallet = async() => {
 // This funnction is to be moved to platform
 exports.signTransaction =  async payload => {
   try {
-    let { from, to, data, value = 0, gas, gasPrice, privKey, nonce } = payload;
+    let { from, to, data, value = 0, gas, gasPrice, privateKey, nonce } = payload;
     let bcNonce = await web3.eth.getTransactionCount(from, "pending");
     if (payload.nonce) nonce = Math.max(nonce, bcNonce);
     let txParams = {
@@ -122,9 +122,9 @@ exports.signTransaction =  async payload => {
       nonce: web3.utils.toHex(nonce)
     };
     let tx = new Tx(txParams);
-    if (privKey.startsWith("0x")) privKey = privKey.substr(2);
-    privKey  = Buffer.from(privKey, "hex")
-    tx.sign(privKey);
+    if (privateKey.startsWith("0x")) privateKey = privateKey.substr(2);
+    privateKey  = Buffer.from(privateKey, "hex")
+    tx.sign(privateKey);
     let serializedTx = "0x" + tx.serialize().toString("hex");
     return serializedTx;
   } catch (error) {

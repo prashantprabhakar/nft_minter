@@ -41,7 +41,6 @@ const mint = async payload => {
     });
 
     let txHash = await web3Service.submitTransaction(signedTx);
-    console.log(txHash)
     return txHash;
   } catch(error) {
     console.log(error);
