@@ -7,7 +7,9 @@ const { minters, additionalGasPrice, totalToMint} = require("../config")
 
 
 let errorCount = 0; // to prevent script from running infinite
-let minterNonce = {}
+let totalMinted = 0;
+let minterNonce = {};
+const mintfee = 0.123 * (10 ** 18);  // wei
 
 const mintNft = async(currentMinter) => {
   try {
@@ -27,10 +29,11 @@ const mintNft = async(currentMinter) => {
       privateKey,
       gas: 30000000,
       additionalGasPrice,
+      value: mintfee*5,
     });
 
     minterNonce[mintService] = minterNonce[minter] + 1;
-    totalToMint += 5
+    totalMinted += 5
     return txHash
   } catch(error) {
     console.log(error);
@@ -38,7 +41,7 @@ const mintNft = async(currentMinter) => {
   }
 }
 
-while(totalToMint < 100 || errorCount >= 50) {
+while(totalMinted < totalToMint || errorCount >= 50) {
   try {
     for(let i=0; i< minters.length; i++) {
       mintNft(minters[i]).then( txHash => console.log("Tx Hash sent:", txHash) );

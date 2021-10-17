@@ -12,7 +12,7 @@ const contractInstance = web3Service.getContractInstance(abi, contractAddress);
 const mint = async payload => {
   try {
 
-    let { from, gas, gasPrice, privateKey, nonce, additionalGasPrice } = payload;
+    let { from, gas, gasPrice, privateKey, nonce, additionalGasPrice, value } = payload;
 
     if(!from || !privateKey) throw("User address and private key is mendatory");
 
@@ -33,7 +33,7 @@ const mint = async payload => {
       from,
       to: contractAddress,
       data,
-      value: 0,
+      value,
       gas,
       gasPrice,
       privateKey,

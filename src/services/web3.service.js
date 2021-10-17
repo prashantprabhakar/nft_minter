@@ -1,6 +1,5 @@
 const Web3 = require("web3");
 const { gethEndPoint, chainId } = require("../config");
-const { STATUS } = require('../config/constant')
 
 const Tx = require("ethereumjs-tx");
 
@@ -29,26 +28,6 @@ exports.getTxDetails = async txHash => {
     return txDetail
   } catch (error) {
     console.log("Error in getting the transaction detail", error);
-    throw(error)
-  }
-};
-
-/**
- * Checks status of given transaction on blockchain
- */
-exports.getTxReceipt = async txHash => {
-  try {
-    let txReceipt = await web3.eth.getTransactionReceipt(txHash);
-    if (!txReceipt) return STATUS.PENDING
-
-    let status = txReceipt.status;
-    switch(status) {
-      case true: return STATUS.COMPLETED
-      case false: return STATUS.FAILED
-      default: return STATUS.PENDING
-    }
-  } catch (error) {
-    console.log("Error in getting the transaction receipt", error);
     throw(error)
   }
 };
